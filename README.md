@@ -62,7 +62,3 @@ http://127.0.0.1:5000/
 * User authentication for administrators.
 * Mobile-friendly dashboard.
 * Notifications for absent students.
-
----
-
-If you want, I can also provide a **LICENSE**, **CONTRIBUTING.md**, or improve the README with badges, screenshots, or installation scripts.
