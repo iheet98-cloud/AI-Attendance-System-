@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face Recognition Attendance System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 30px;
+        }
+        
+        .video-section, .attendance-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+        }
+        
+        .section-title {
+            font-size: 1.5em;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 75%;
+            background: #000;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .video-container img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        
+        .attendance-list {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        
+        .attendance-item {
+            background: white;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.2s;
+        }
+        
+        .attendance-item:hover {
+            transform: translateX(5px);
+        }
+        
+        .attendance-name {
+            font-weight: bold;
+            color: #667eea;
+            font-size: 1.1em;
+        }
+        
+        .attendance-time {
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        .refresh-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-bottom: 15px;
+            transition: transform 0.2s;
+        }
+        
+        .refresh-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+        
+        @media (max-width: 968px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎓 Face Recognition Attendance System</h1>
+            <p>Real-time attendance tracking using face recognition</p>
+        </div>
+        
+        <div class="content">
+            <div class="video-section">
+                <h2 class="section-title">📹 Live Camera Feed</h2>
+                <div class="video-container">
+                    <img src="{{ url_for('video_feed') }}" alt="Video Feed">
+                </div>
+            </div>
+            
+            <div class="attendance-section">
+                <h2 class="section-title">📋 Attendance Records</h2>
+                <button class="refresh-btn" onclick="loadAttendance()">🔄 Refresh</button>
+                <div class="attendance-list" id="attendanceList">
+                    <div class="empty-state">Loading attendance data...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function loadAttendance() {
+            fetch('/attendance')
+                .then(response => response.json())
+                .then(data => {
+                    const list = document.getElementById('attendanceList');
+                    if (data.length === 0) {
+                        list.innerHTML = '<div class="empty-state">No attendance records yet</div>';
+                        return;
+                    }
+                    
+                    list.innerHTML = data.map(item => `
+                        <div class="attendance-item">
+                            <span class="attendance-name">${item.name}</span>
+                            <span class="attendance-time">${item.time}</span>
+                        </div>
+                    `).join('');
+                })
+                .catch(error => {
+                    console.error('Error loading attendance:', error);
+                    document.getElementById('attendanceList').innerHTML = 
+                        '<div class="empty-state">Error loading attendance data</div>';
+                });
+        }
+        
+        // Load attendance on page load
+        loadAttendance();
+        
+        // Auto-refresh every 5 seconds
+        setInterval(loadAttendance, 5000);
+    </script>
+</body>
+</html>
+
