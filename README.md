@@ -1,8 +1,4 @@
-Below is a polished **README.md** suitable for GitHub. It explains your AI Attendance System clearly and professionally.
-
----
-
-# **AI Attendance System**
+**AI Attendance System**
 
 This project implements an automated attendance system using **face recognition** and a **Flask-based web interface**, designed to replace the traditional manual attendance process still used in many schools. The system identifies students’ faces in real time through a webcam, marks their attendance automatically, and stores records securely in a CSV file.
 
