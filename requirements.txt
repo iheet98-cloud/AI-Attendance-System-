@@ -1,0 +1,7 @@
+opencv-python>=4.8.0
+numpy>=1.26.0
+face-recognition>=1.3.0
+Flask>=3.0.0
+# Note: dlib will be installed automatically as a dependency of face-recognition
+# On Windows, dlib may need to be built from source, which requires Visual C++ build tools
+
